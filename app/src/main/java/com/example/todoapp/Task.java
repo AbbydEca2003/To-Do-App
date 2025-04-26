@@ -1,18 +1,27 @@
 package com.example.todoapp;
 
 public class Task {
+    private int id;
     private String name;
     private String description;
     private String priority;
     private String duedate;
     private boolean isCompleted;
 
-    public Task(String name, String description, String priority, String duedate, boolean isCompleted){
+    public Task(int id, String name, String description, String priority, String duedate, boolean isCompleted){
         this.name = name;
         this.description = description;
         this.priority = priority;
         this.duedate = duedate;
         this.isCompleted = isCompleted;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

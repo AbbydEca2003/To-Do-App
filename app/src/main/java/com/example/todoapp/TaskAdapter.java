@@ -1,6 +1,7 @@
 package com.example.todoapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Task task = this.taskList.get(position);
         holder.taskTitle.setText(task.getName());
         holder.taskDescription.setText(task.getDescription());
+        holder.taskDueDate.setText(task.getDuedate());
+        String priority = task.getPriority();
+
+        String priorityColor = "#00FF00"; // default to green (Low)
+
+        if (priority.equals("Medium")) {
+            priorityColor = "#FFFF00"; // yellow
+        } else if (priority.equals("High")) {
+            priorityColor = "#FF0000"; // red
+        }
+
+        holder.taskPriority.setBackgroundColor(Color.parseColor(priorityColor));
 
     }
 
@@ -44,13 +57,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         public TextView taskTitle;
         public TextView taskDescription;
         public LinearLayout taskPriority;
+        public TextView taskDueDate;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             this.taskTitle = itemView.findViewById(R.id.taskTitle);
             this.taskDescription = itemView.findViewById(R.id.taskDescription);
             this.taskPriority = itemView.findViewById(R.id.taskPriority);
-
+            this.taskDueDate = itemView.findViewById(R.id.taskDueDate);
         }
     }
 }
