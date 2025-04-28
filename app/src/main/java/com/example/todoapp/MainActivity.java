@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadSampleData(){
         taskList.clear();
-        taskList.add(new Task(1,"Math Homework", "Complete exercise 1.1", "High", "1234", true));
+        taskList.add(new Task(1,"Math Homework", "Complete exercise 1.1", "High", "1234", false));
         taskList.add(new Task(2,"Science Homework", "Complete experiment 2", "Low", "1234", false));
     }
 }

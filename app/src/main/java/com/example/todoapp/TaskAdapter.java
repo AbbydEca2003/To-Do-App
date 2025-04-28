@@ -8,9 +8,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -46,6 +49,28 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         holder.taskPriority.setBackgroundColor(Color.parseColor(priorityColor));
 
+        holder.itemView.setOnClickListener(v->{
+            boolean completionStatus = task.isCompleted();
+            if(completionStatus == true){
+                Toast.makeText(context, "Task Completed Undone", Toast.LENGTH_SHORT).show();
+                task.setCompleted(false);
+                completionStatus = false;
+                holder.taskCompleted.setBackgroundColor(Color.TRANSPARENT);
+            }else{
+                Toast.makeText(context, "Task Completed", Toast.LENGTH_SHORT).show();
+                task.setCompleted(true);
+                completionStatus = true;
+                holder.taskCompleted.setBackgroundColor(Color.parseColor("#008000"));
+            }
+
+
+        });
+
+        holder.itemView.setOnLongClickListener(v->{
+            Toast.makeText(context, "Editable menu", Toast.LENGTH_SHORT).show();
+            return true;
+        });
+
     }
 
     @Override
@@ -58,6 +83,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         public TextView taskDescription;
         public LinearLayout taskPriority;
         public TextView taskDueDate;
+        public LinearLayout taskCompleted;
+        boolean isCompleted = false;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +92,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             this.taskDescription = itemView.findViewById(R.id.taskDescription);
             this.taskPriority = itemView.findViewById(R.id.taskPriority);
             this.taskDueDate = itemView.findViewById(R.id.taskDueDate);
+            this.taskCompleted = itemView.findViewById(R.id.taskCompleted);
         }
     }
 }
