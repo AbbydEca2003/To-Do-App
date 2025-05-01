@@ -1,6 +1,6 @@
 # 📝 Simple To-Do List App
 
-A minimalist web-based To-Do List app to help you keep track of your daily tasks and stay organized.
+Yet another minimalist web-based To-Do List app to help you keep track of your daily tasks and stay organized.
 
 ## 🚀 Features
 
