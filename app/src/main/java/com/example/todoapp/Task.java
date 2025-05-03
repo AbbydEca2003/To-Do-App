@@ -8,7 +8,7 @@ public class Task {
     private String duedate;
     private boolean isCompleted;
 
-    public Task(int id, String name, String description, String priority, String duedate, boolean isCompleted){
+    public Task(String name, String description, String priority, String duedate){
         this.name = name;
         this.description = description;
         this.priority = priority;
@@ -63,4 +63,6 @@ public class Task {
     public void setCompleted(boolean completed) {
         isCompleted = completed;
     }
+
+
 }

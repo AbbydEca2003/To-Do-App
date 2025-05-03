@@ -1,5 +1,6 @@
 package com.example.todoapp;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,19 +12,19 @@ import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "toDoList.db";
-    public static final int DB_VERSION = 1;
-    public DatabaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public static final int DB_VERSION = 2;
+    public DatabaseHelper(@Nullable Context context) {
+        super(context, DATABASE_NAME, null, DB_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE toDoList("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "name String,"
-                + "description String,"
-                + "priority String,"
-                + "dueDate timestamp,"
+                + "name TEXT,"
+                + "description TEXT,"
+                + "priority TEXT,"
+                + "dueDate TEXT,"
                 + "isCompleted INTEGER DEFAULT 0)");
     }
 
@@ -33,9 +34,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long insertTask(){
+    public long insertTask(Task taskItem){
         SQLiteDatabase db = this.getWritableDatabase();
-        return 1;
+        ContentValues values = new ContentValues();
+        values.put("name", taskItem.getName());
+        values.put("description", taskItem.getDescription());
+        values.put("priority", taskItem.getPriority());
+        values.put("dueDate", taskItem.getDuedate());
+
+        long id = db.insert("toDoList", null, values);
+        db.close();
+        return id;
+
     }
 
     public ArrayList<Task> getAllTask(){
@@ -43,16 +53,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM toDoList ORDER BY id DESC", null);
         ArrayList<Task> taskList =new ArrayList<>();
         if(cursor.moveToFirst()){
-//            do{
-//                Task taskItem =new Task(
-//                        cursor.getString(1),
-//                        cursor.getString(2),
-//                        cursor.getString(3),
-//                        cursor.getString(4),
-//                        cursor.getString(5)
-//                );
-//                taskItem.add(taskItem);
-//            }
+            do{
+                Task taskItem =new Task(
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4)
+                );
+                taskList.add(taskItem);
+            }while(cursor.moveToNext());
         }
+        cursor.close();
+        return taskList;
     }
 }

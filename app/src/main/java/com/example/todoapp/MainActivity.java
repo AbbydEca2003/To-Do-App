@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.autofill.AutofillValue;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -25,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Task> taskList;
     private RecyclerView recycleView;
     private TaskAdapter adapter;
+    private DatabaseHelper dbHelper;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,9 +33,8 @@ public class MainActivity extends AppCompatActivity {
         recycleView = findViewById(R.id.recycleView);
         recycleView.setLayoutManager(new LinearLayoutManager(this));
         floatingButton = findViewById(R.id.floatingButton);
-
+        dbHelper = new DatabaseHelper(this);
         taskList = new ArrayList<>();
-        loadSampleData();
 
         adapter = new TaskAdapter(taskList, this);
         recycleView.setAdapter(adapter);
@@ -70,21 +69,17 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    int id = 3;
-                    Task task = new Task(id, name, description, priority, dueDate, false);
-                    taskList.add(0,(task));
-                    Toast.makeText(this, "Task Added", Toast.LENGTH_SHORT).show();
+
+                    Task task = new Task(name, description, priority, dueDate);
+                    long id =  dbHelper.insertTask(task);
+                    task.setId((int)id);
+                    taskList.add(0, task);
+
 
                     adapter.notifyItemInserted(0);
                     recycleView.scrollToPosition(0);
-
+                    Toast.makeText(this, "Task Added", Toast.LENGTH_SHORT).show();
                 })
                 .show();
-    }
-
-    private void loadSampleData(){
-        taskList.clear();
-        taskList.add(new Task(1,"Math Homework", "Complete exercise 1.1", "High", "1234", false));
-        taskList.add(new Task(2,"Science Homework", "Complete experiment 2", "Low", "1234", false));
     }
 }
