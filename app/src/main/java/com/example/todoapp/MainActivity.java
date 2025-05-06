@@ -20,11 +20,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
     private FloatingActionButton floatingButton;
     private ArrayList<Task> taskList;
     private RecyclerView recycleView;
     private TaskAdapter adapter;
     private DatabaseHelper dbHelper;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,19 +34,18 @@ public class MainActivity extends AppCompatActivity {
 
         recycleView = findViewById(R.id.recycleView);
         recycleView.setLayoutManager(new LinearLayoutManager(this));
+
         floatingButton = findViewById(R.id.floatingButton);
         dbHelper = new DatabaseHelper(this);
-        taskList = new ArrayList<>();
+        taskList = dbHelper.getAllTask();
 
         adapter = new TaskAdapter(taskList, this);
         recycleView.setAdapter(adapter);
 
-        floatingButton.setOnClickListener(v->{
-           addNewTask();
-        });
+        floatingButton.setOnClickListener(v -> addNewTask());
     }
 
-    private void addNewTask(){
+    private void addNewTask() {
         View DialogView = LayoutInflater.from(this).inflate(R.layout.activity_add_new_task, null);
 
         EditText taskTitle = DialogView.findViewById(R.id.taskTitleInput);
@@ -54,31 +55,33 @@ public class MainActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
                 .setView(DialogView)
-                .setNegativeButton("cancil", null)
-                .setPositiveButton("New Task", (dialog, which)->{
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("New Task", (dialog, which) -> {
                     String name = taskTitle.getText().toString().trim();
                     String description = taskDescription.getText().toString().trim();
                     int day = taskDueDate.getDayOfMonth();
                     int month = taskDueDate.getMonth() + 1;
                     int year = taskDueDate.getYear();
-                    String dueDate = "Due: "+ day + "/" + month + "/" + year;
+                    String dueDate = day + "/" + month + "/" + year;
                     String priority = taskPriority.getSelectedItem().toString();
 
-
-                    if(TextUtils.isEmpty(name) || TextUtils.isEmpty(description)){
+                    if (TextUtils.isEmpty(name) || TextUtils.isEmpty(description)) {
                         Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     Task task = new Task(name, description, priority, dueDate);
-                    long id =  dbHelper.insertTask(task);
-                    task.setId((int)id);
-                    taskList.add(0, task);
+                    long id = dbHelper.insertTask(task);
 
-
-                    adapter.notifyItemInserted(0);
-                    recycleView.scrollToPosition(0);
-                    Toast.makeText(this, "Task Added", Toast.LENGTH_SHORT).show();
+                    if (id != -1) {
+                        task.setId((int) id);
+                        taskList.add(0, task);
+                        adapter.notifyItemInserted(0);
+                        recycleView.scrollToPosition(0);
+                        Toast.makeText(this, "Task Added", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Failed to add task", Toast.LENGTH_SHORT).show();
+                    }
                 })
                 .show();
     }
