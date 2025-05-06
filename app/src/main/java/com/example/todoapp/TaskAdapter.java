@@ -2,6 +2,7 @@ package com.example.todoapp;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskPriority.setBackgroundColor(Color.parseColor(priorityColor));
 
         holder.itemView.setOnClickListener(v->{
+            Log.d("click", "clicked");
             boolean completionStatus = task.isCompleted();
             if(completionStatus == true){
                 Toast.makeText(context, "Task Completed Undone", Toast.LENGTH_SHORT).show();
@@ -60,7 +62,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 Toast.makeText(context, "Task Completed", Toast.LENGTH_SHORT).show();
                 task.setCompleted(true);
                 completionStatus = true;
-                holder.taskCompleted.setBackgroundColor(Color.parseColor("#008000"));
+                holder.taskCompleted.setBackgroundColor(Color.parseColor("#b1fca4"));
             }
 
 
